@@ -8,6 +8,7 @@ import expenses from "../../repositories/expenses";
 import { WalletCard } from "../../components/WalletCard";
 import { StatusWalletCard } from "../../components/StatusWalletCard";
 import happy from '../../assets/happy.svg';
+import { RechartCard } from "../../components/RechartCard";
 
 export const Dashboard = () => {
   const [monthSelected, setMonthSelected] = useState<string>(
@@ -123,7 +124,24 @@ const totalSaldoMemo = useMemo(() => {
       }
   }, [totalSaldoMemo]);
 
+  
+  const relationsChartResult = useMemo(() => {
+    const total = totalGainsMemo + totalExpensesMemo;
+    const percentGains = (totalGainsMemo / total) * 100 | 0;
+    const percentExpenses = (totalExpensesMemo / total) * 100 | 0;
 
+    console.log(percentGains, percentExpenses);
+
+    const data = [
+      { name: 'Entradas', percent: Number(percentGains.toFixed(1)),value: totalGainsMemo, color: '#F7931B'},
+      { name: 'Saídas', percent: Number(percentExpenses.toFixed(1)),value: totalExpensesMemo, color: '#E44C4E'},
+      
+    ]
+
+    return data;
+}, [totalGainsMemo, totalExpensesMemo]);
+
+  
 
   console.log(totalExpensesMemo);
 
@@ -148,6 +166,8 @@ const totalSaldoMemo = useMemo(() => {
         <WalletCard title="Saídas" amount={totalExpensesMemo} subtitle="Wallet Card" color="#E44C4E" icon="down"  />
 
         <StatusWalletCard icon={happy} title="Bem vindo!" description="Aqui tem tudo que voçê precisa saber sobre sua carteira digital" message={message} />
+
+        <RechartCard  data={relationsChartResult} />
      </C.Content>
     </C.Container>
   );
